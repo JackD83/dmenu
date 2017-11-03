@@ -126,6 +126,7 @@ void execute_inline_command(char* dir, char** args)
     
     // launch the program and it should not return,
     // otherwise it means we are not able to execute the application
+
     execvp(args[0], args);
     
     log_message("Unable to execute command - ");
@@ -141,6 +142,8 @@ void execute_next_command(char* dir, char** args)
     FILE* out = load_file(DMENU_COMMAND_FILE, "w");
     
     if (out != NULL) {
+
+        fprintf(out, "#!/bin/sh\n", dir);
         
         //Write change dir
         if (dir!=NULL && strlen(dir) > 0)
@@ -156,6 +159,7 @@ void execute_next_command(char* dir, char** args)
         }    
         fprintf(out, "\n");
         fclose(out);
+        
     } else {
         log_error("Unable to write next command");
     }

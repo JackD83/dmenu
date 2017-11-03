@@ -7,7 +7,7 @@
 
 //Currently the hardcoded defaults are intended for Dingoo A320
 #ifndef DMENU_PATH
-#define DMENU_PATH           "/usr/local/dmenu/"
+#define DMENU_PATH           "/boot/usr/mmc/dmenu/"
 #endif 
 
 #ifndef DMENU_CONF_FILE_NAME
@@ -28,7 +28,7 @@ int  FILESYSTEM_READ_ONLY;
 #define DMENU_THEMES         DMENU_PATH "themes/"
 #define DMENU_CONF_FILE      DMENU_PATH DMENU_CONF_FILE_NAME
 #define DMENU_CONF_TEMP     "/tmp/.tmp"
-#define DMENU_COMMAND_FILE	"/tmp/.next"
+#define DMENU_COMMAND_FILE	"/tmp/.nextCMD"
 #define DMENU_SNAPSHOT		"/tmp/.screen"
 #define DMENU_BACKGROUNDS    DMENU_PATH "wallpapers/"
 #define GLOBAL_RESOURCE_PATH DMENU_PATH "resources/"
@@ -49,8 +49,8 @@ char THEME_NAME[100];
 #define GPIO_LOCK_MASK       (0x400000)
 #define GPIO_POWER_MASK      (0x40000000)
 
-#define SCREEN_WIDTH         320
-#define SCREEN_HEIGHT        240
+#define SCREEN_WIDTH         480
+#define SCREEN_HEIGHT        272
 #define SCREEN_COLOR_DEPTH   16
 #define SCREEN_BPP           (SCREEN_COLOR_DEPTH>>3)
 

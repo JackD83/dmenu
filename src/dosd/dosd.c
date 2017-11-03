@@ -54,7 +54,7 @@ int dosd_init()
     memset(&g_state, 0, sizeof(g_state));
     memset(&g_images, 0, sizeof(g_images));
     
-#ifdef DINGOO_BUILD
+#ifdef DINGOO_BUILD_OLD
     g_state.proc_battery = fopen(BATTERY_DEVICE, "rb");
     if (!g_state.proc_battery) goto init_error;
     
@@ -142,7 +142,7 @@ void dosd_deinit()
     log_debug("De-initializing");
     int i;
     
-#ifdef DINGOO_BUILD
+#ifdef DINGOO_BUILD_OLD
 	g_state.mhz=0;
 
     if (g_state.proc_battery)
@@ -241,7 +241,7 @@ void _blit(SDL_Surface *surface, image_e which_image, ...) {
 
 void _update()
 {
-#ifdef DINGOO_BUILD
+#ifdef DINGOO_BUILD_OLD
     char buf[128];
     int mvolts;
     uint32_t gpio;
