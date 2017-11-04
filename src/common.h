@@ -23,7 +23,7 @@
 
 #define internal_command(s) (s[0] == '!')
 
-#define getKeyDir(k) ((k==DINGOO_BUTTON_L || k==DINGOO_BUTTON_Y || k==DINGOO_BUTTON_LEFT || k==DINGOO_BUTTON_UP)?PREV:NEXT)
+#define getKeyDir(k) ((k==DINGOO_BUTTON_VOL_DOWN || k==DINGOO_BUTTON_Y || k==DINGOO_BUTTON_LEFT || k==DINGOO_BUTTON_UP)?PREV:NEXT)
 
 typedef enum { MAINMENU, FILELIST, IMAGEVIEWER, COLORPICKER } MenuState;
 typedef enum { THEMESELECT, BACKGROUNDSELECT, COLORSELECT } InternalCommand; 

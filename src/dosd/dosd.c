@@ -17,7 +17,7 @@
 
 extern int image_pallette[3];
 extern cfg_t *cfg_main;
-bool show_speed;
+bool show_speed = false;
 SDL_Rect speed_dst_rect1, speed_dst_rect2;
 TTF_Font* speed_font;
 SDL_Color* dosd_color;
@@ -54,25 +54,29 @@ int dosd_init()
     memset(&g_state, 0, sizeof(g_state));
     memset(&g_images, 0, sizeof(g_images));
     
-#ifdef DINGOO_BUILD_OLD
+#ifdef DINGOO_BUILD_OFF
     g_state.proc_battery = fopen(BATTERY_DEVICE, "rb");
     if (!g_state.proc_battery) goto init_error;
     
     g_state.proc_gpio1 = fopen(CHARGE_STATUS_DEVICE, "rb");
     if (!g_state.proc_gpio1) goto init_error;
     
-    g_state.proc_gpio3 = fopen(LOCK_STATUS_DEVICE, "rb");
-    if (!g_state.proc_gpio3) goto init_error;
+   // g_state.proc_gpio3 = fopen(LOCK_STATUS_DEVICE, "rb");
+  //  if (!g_state.proc_gpio3) goto init_error;
 
-	g_state.proc_cgm = fopen(CPU_DEVICE, "r");
-	if (!g_state.proc_cgm) goto init_error;
+//	g_state.proc_cgm = fopen(CPU_DEVICE, "r");
+//	if (!g_state.proc_cgm) goto init_error;
+
+/*
 
 	show_speed = cfg_getbool(cfg_main, "SpeedDisp");
 
     init_rect_pos( &speed_dst_rect1, CPU_DISP_X, CPU_DISP_Y);
     init_rect_pos( &speed_dst_rect2, CPU_DISP_X+1, CPU_DISP_Y);
-	speed_font = get_theme_font(CPU_FONT_SIZE);
-	g_state.mhz = 0;
+    speed_font = get_theme_font(CPU_FONT_SIZE);
+    */
+    g_state.mhz = 0;
+    
 	g_state.is_charging = false;
 #endif
     
@@ -142,7 +146,7 @@ void dosd_deinit()
     log_debug("De-initializing");
     int i;
     
-#ifdef DINGOO_BUILD_OLD
+#ifdef DINGOO_BUILD_OFF_OFF_OLD
 	g_state.mhz=0;
 
     if (g_state.proc_battery)
@@ -151,11 +155,11 @@ void dosd_deinit()
     if (g_state.proc_gpio1)
         fclose(g_state.proc_gpio1);
     
-    if (g_state.proc_gpio3)
-        fclose(g_state.proc_gpio3);
+  //  if (g_state.proc_gpio3)
+   //     fclose(g_state.proc_gpio3);
 
-	if (g_state.proc_cgm)
-		fclose(g_state.proc_cgm);
+	//if (g_state.proc_cgm)
+	//	fclose(g_state.proc_cgm);
 #endif
     
     for (i = 0; i < IMG_MAX; i++)
@@ -187,10 +191,12 @@ void dosd_show(SDL_Surface* surface)
     }
     
     // Lock
+    /*
     if (g_state.is_locked)
     {
         _blit(surface, IMG_LOCK, IMG_BATTERY, -1);
     }
+    */
 
 	if (show_speed) {
 		SDL_Surface* speed_display;
@@ -205,7 +211,7 @@ void dosd_show(SDL_Surface* surface)
 }
 
 inline bool dosd_is_locked() {
-    return g_state.is_locked;
+    return false;
 }
 
 void _blit(SDL_Surface *surface, image_e which_image, ...) {
@@ -241,7 +247,7 @@ void _blit(SDL_Surface *surface, image_e which_image, ...) {
 
 void _update()
 {
-#ifdef DINGOO_BUILD_OLD
+#ifdef DINGOO_BUILD_OFF_OLD
     char buf[128];
     int mvolts;
     uint32_t gpio;
@@ -260,11 +266,11 @@ void _update()
 	g_state.is_charging = ((gpio & GPIO_POWER_MASK) == 0);
 
     // Lock status
-    rewind(g_state.proc_gpio3);
-    fgets(buf, 127, g_state.proc_gpio3);
-    sscanf(buf, "%x", &gpio);
+   // rewind(g_state.proc_gpio3);
+ //   fgets(buf, 127, g_state.proc_gpio3);
+  //  sscanf(buf, "%x", &gpio);
     
-    g_state.is_locked = ((gpio & GPIO_LOCK_MASK) == 0);
+  //  g_state.is_locked = ((gpio & GPIO_LOCK_MASK) == 0);
     
     // Battery charge level
     if      (mvolts >= BAT_LEVEL_BEST) g_state.battery = BAT_STATE_FULL;
