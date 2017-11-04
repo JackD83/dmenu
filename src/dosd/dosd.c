@@ -9,10 +9,10 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-#include "dosd/dosd.h"
-#include "dosd/images.h"
+#include "dosd.h"
+#include "images.h"
 #include "env.h"
-#include "common.h"
+#include "../common.h"
 #include "resource.h"
 
 extern int image_pallette[3];
@@ -29,9 +29,7 @@ struct {
     FILE* proc_gpio3;
     FILE* proc_gpio1;
 	FILE* proc_cgm;
-	int mhz;
-    bool is_locked;
-    bool is_charging;
+	int mhz;  
     BatteryState battery;
     unsigned int update_counter;
     // Measured in SDL_GetTick()s
@@ -54,30 +52,21 @@ int dosd_init()
     memset(&g_state, 0, sizeof(g_state));
     memset(&g_images, 0, sizeof(g_images));
     
-#ifdef DINGOO_BUILD_OFF
+#ifdef DINGOO_BUILD
     g_state.proc_battery = fopen(BATTERY_DEVICE, "rb");
     if (!g_state.proc_battery) goto init_error;
     
-    g_state.proc_gpio1 = fopen(CHARGE_STATUS_DEVICE, "rb");
-    if (!g_state.proc_gpio1) goto init_error;
-    
-   // g_state.proc_gpio3 = fopen(LOCK_STATUS_DEVICE, "rb");
-  //  if (!g_state.proc_gpio3) goto init_error;
-
-//	g_state.proc_cgm = fopen(CPU_DEVICE, "r");
-//	if (!g_state.proc_cgm) goto init_error;
-
-/*
+	g_state.proc_cgm = fopen(CPU_DEVICE, "r");
+	if (!g_state.proc_cgm) goto init_error;
 
 	show_speed = cfg_getbool(cfg_main, "SpeedDisp");
 
     init_rect_pos( &speed_dst_rect1, CPU_DISP_X, CPU_DISP_Y);
     init_rect_pos( &speed_dst_rect2, CPU_DISP_X+1, CPU_DISP_Y);
     speed_font = get_theme_font(CPU_FONT_SIZE);
-    */
-    g_state.mhz = 0;
     
-	g_state.is_charging = false;
+    g_state.mhz = 0;    
+	
 #endif
     
     dosd_color = get_theme_font_color();
@@ -146,20 +135,14 @@ void dosd_deinit()
     log_debug("De-initializing");
     int i;
     
-#ifdef DINGOO_BUILD_OFF_OFF_OLD
+#ifdef DINGOO_BUILD
 	g_state.mhz=0;
 
     if (g_state.proc_battery)
         fclose(g_state.proc_battery);
-    
-    if (g_state.proc_gpio1)
-        fclose(g_state.proc_gpio1);
-    
-  //  if (g_state.proc_gpio3)
-   //     fclose(g_state.proc_gpio3);
-
-	//if (g_state.proc_cgm)
-	//	fclose(g_state.proc_cgm);
+     
+	if (g_state.proc_cgm)
+		fclose(g_state.proc_cgm);
 #endif
     
     for (i = 0; i < IMG_MAX; i++)
@@ -184,20 +167,12 @@ void dosd_show(SDL_Surface* surface)
     // This is a bit of a hack, as it relies on battery_state_e
     // To have the same index as image_e
     battery_status = g_state.battery;
-	if ( g_state.is_charging ) battery_status = BAT_STATE_CHARGING;
+	if (false ) battery_status = BAT_STATE_CHARGING;
     if (battery_status != BAT_STATE_EMPTY)
     {
         _blit(surface, battery_status, -1);
     }
     
-    // Lock
-    /*
-    if (g_state.is_locked)
-    {
-        _blit(surface, IMG_LOCK, IMG_BATTERY, -1);
-    }
-    */
-
 	if (show_speed) {
 		SDL_Surface* speed_display;
 		char speed_text[10] = " ";
@@ -247,7 +222,7 @@ void _blit(SDL_Surface *surface, image_e which_image, ...) {
 
 void _update()
 {
-#ifdef DINGOO_BUILD_OFF_OLD
+#ifdef DINGOO_BUILD
     char buf[128];
     int mvolts;
     uint32_t gpio;
@@ -255,23 +230,7 @@ void _update()
     rewind(g_state.proc_battery);
     fgets(buf, 127, g_state.proc_battery);
     sscanf(buf, "%d", &mvolts);
-
-    // Charge status
-    rewind(g_state.proc_gpio1);
-    fgets(buf, 127, g_state.proc_gpio1);
-    sscanf(buf, "%x", &gpio);
-    
-    // FIXME: the GPIO bit indicating charge status seems
-    // to randomly jump when a USB cable is attached.
-	g_state.is_charging = ((gpio & GPIO_POWER_MASK) == 0);
-
-    // Lock status
-   // rewind(g_state.proc_gpio3);
- //   fgets(buf, 127, g_state.proc_gpio3);
-  //  sscanf(buf, "%x", &gpio);
-    
-  //  g_state.is_locked = ((gpio & GPIO_LOCK_MASK) == 0);
-    
+   
     // Battery charge level
     if      (mvolts >= BAT_LEVEL_BEST) g_state.battery = BAT_STATE_FULL;
     else if (mvolts >= BAT_LEVEL_FAIR) g_state.battery = BAT_STATE_LEVEL2;
@@ -288,9 +247,7 @@ void _update()
 			}
 		}
 	}
-#else
-    g_state.is_locked   = false;
-    g_state.is_charging = false;
+#else  
     g_state.battery     = BAT_STATE_EMPTY;
 	g_state.mhz			= 0;
 #endif
@@ -301,5 +258,5 @@ void _update()
 }
 
 bool dosd_is_charging() {
-	return g_state.is_charging;
+	return false;
 }

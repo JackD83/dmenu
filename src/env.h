@@ -44,10 +44,7 @@ char THEME_NAME[100];
 #define BACKLIGHT_DEVICE     "/proc/jz/lcd_backlight"
 #define MIXER_DEVICE         "/dev/mixer"
 #define BATTERY_DEVICE       "/proc/jz/battery"
-#define CHARGE_STATUS_DEVICE "/proc/jz/gpio1_pxpin"
-#define LOCK_STATUS_DEVICE   "/proc/jz/gpio3_pxpin"
-#define GPIO_LOCK_MASK       (0x400000)
-#define GPIO_POWER_MASK      (0x40000000)
+
 
 #define SCREEN_WIDTH         480
 #define SCREEN_HEIGHT        272
