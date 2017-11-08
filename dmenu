@@ -1,8 +1,8 @@
 #!/bin/sh
-ACT="/tmp/.next"
+ACT="/tmp/.nextCMD"
 CMD="dmenu.bin"
-if [ "`pwd`" != "/usr/local/dmenu" ]; then 
-    CMD="dmenu-host.bin"
+if [ "`pwd`" != "/mnt/memory/dmenu" ]; then 
+    CMD="dmenu.bin"
 fi
 
 touch "$ACT"

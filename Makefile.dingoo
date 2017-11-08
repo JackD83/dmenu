@@ -1,11 +1,11 @@
-TARGET     := dmenu.bin
+TARGET     := dmenuc.bin
 BUILD      := build
 TOOLCHAINDIR := /dingux
 INCLS      := src src/dosd
 SOURCES    := src src/dosd
 BINPATH    := ${TOOLCHAINDIR}/bin
 LIBPATH    := $(TOOLCHAINDIR)/lib
-DMENU_PATH := \"/boot/usr/mmc/dmenu/\"
+DMENU_PATH := \"/mnt/mmc/dmenu/\"
 
 ARCH	:= mipsel-linux-uclibc-
 CC	:= ${BINPATH}/$(ARCH)gcc
