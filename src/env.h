@@ -7,7 +7,7 @@
 
 //Currently the hardcoded defaults are intended for Dingoo A320
 #ifndef DMENU_PATH
-#define DMENU_PATH           "/boot/usr/mmc/dmenu/"
+#define DMENU_PATH           "/mnt/mmc/dmenu/"
 #endif 
 
 #ifndef DMENU_CONF_FILE_NAME

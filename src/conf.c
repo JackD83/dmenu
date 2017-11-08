@@ -324,7 +324,9 @@ void conf_unload()
     if (can_write_fs()) {
 		if (conf_changed ==  1) {
 			conf_to_file(cfg_main, DMENU_CONF_FILE);
-		}
+		} else {
+            log_debug("Config was not changed");
+        }
 	}
     cfg_free(cfg_main);
     

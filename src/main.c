@@ -293,11 +293,13 @@ void handle_global_key(SDLKey key)
             {
             case DINGOO_BUTTON_VOL_DOWN:
             case DINGOO_BUTTON_VOL_UP:
+                conf_changed = 1;
                 volume_change(dir);
                 sound_out(GLOBAL_KEY);
                 break;
             case DINGOO_BUTTON_X:
             case DINGOO_BUTTON_Y:
+                conf_changed = 1;
                 brightness_change(dir);
                 sound_out(GLOBAL_KEY);
                 break;
