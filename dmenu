@@ -1,15 +1,17 @@
 #!/bin/sh
 ACT="/tmp/.nextCMD"
-CMD="dmenu.bin"
-if [ "`pwd`" != "/mnt/memory/dmenu" ]; then 
-    CMD="dmenu.bin"
+CMD="dmenuc.bin"
+if [ "`pwd`" != "/mnt/mmc/dmenu" ]; then 
+    CMD="dmenuc.bin"
 fi
 
 touch "$ACT"
 
 if ./$CMD; then
     if [ -f "$ACT" ]; then 
-        if  ! sh $ACT; then
+        echo "executing:" >> /tmp/stdout.txt
+        cat $ACT  >> /tmp/stdout.txt
+        if  ! sh $ACT >> /tmp/stdout.txt 2>> /tmp/stderr.txt; then
 #           sleep 5
             echo
         fi

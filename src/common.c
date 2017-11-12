@@ -32,6 +32,7 @@
 
 #define MAX_IMAGE_JOBS 40
 int CURRENT_JOB = 0;
+extern cfg_t *menu_active_item_config;
 pthread_t image_exporter[MAX_IMAGE_JOBS];
 
 void run_internal_command(char* command, char* args, char* workdir);
@@ -140,10 +141,22 @@ void execute_next_command(char* dir, char** args)
 {   
     //Write next command to commandfile
     FILE* out = load_file(DMENU_COMMAND_FILE, "w");
+
+    char* name  = cfg_getstr(menu_active_item_config, "Name");
+    int center = cfg_getbool(menu_active_item_config, "Center");
+    int zoom = cfg_getbool(menu_active_item_config, "Zoom");
+
+    log_message("Executing %s, center %d", name, center);
     
     if (out != NULL) {
 
-        fprintf(out, "#!/bin/sh\n", dir);
+        fprintf(out, "#!/bin/sh\n");
+
+        if(center) {
+            fprintf(out, "echo 1 > /proc/jz/lcd_a320\n");
+        } else if(zoom) {
+             fprintf(out, "echo 2 > /proc/jz/lcd_a320\n");
+        }
         
         //Write change dir
         if (dir!=NULL && strlen(dir) > 0)
@@ -158,6 +171,10 @@ void execute_next_command(char* dir, char** args)
             fprintf(out, "\"%s\" ", *(args+i)); 
         }    
         fprintf(out, "\n");
+        if(center || zoom) {          
+            fprintf(out, "echo 0 > /proc/jz/lcd_a320\n");
+        }
+
         fclose(out);
         
     } else {

@@ -30,8 +30,10 @@ cfg_opt_t submenuitem_opts[] = {
     CFG_STR("Name", 0, CFGF_NONE),
     CFG_STR("Executable", 0, CFGF_NONE),
     CFG_STR("WorkDir", ".", CFGF_NONE),
-    CFG_BOOL("Selector", cfg_false, CFGF_NONE),
+    CFG_BOOL("Selector", cfg_false, CFGF_NONE),   
     CFG_STR("SelectorDir", 0, CFGF_NONE),
+    CFG_BOOL("Center", cfg_false, CFGF_NONE),
+    CFG_BOOL("Zoom", cfg_false, CFGF_NONE),
     CFG_END()
 };
 
@@ -42,6 +44,8 @@ cfg_opt_t menuitem_opts[] = {
     CFG_STR("WorkDir", ".", CFGF_NONE),
     CFG_BOOL("Selector", cfg_false, CFGF_NONE),
     CFG_STR("SelectorDir", 0, CFGF_NONE),
+    CFG_BOOL("Center", cfg_false, CFGF_NONE),
+    CFG_BOOL("Zoom", cfg_false, CFGF_NONE),
     CFG_SEC("SubMenuItem", submenuitem_opts, CFGF_MULTI | CFGF_TITLE),
     CFG_FUNC("include", cfg_include),
     CFG_END()
