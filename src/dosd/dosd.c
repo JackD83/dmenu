@@ -29,6 +29,7 @@ struct {
     FILE* proc_gpio3;
     FILE* proc_gpio1;
 	FILE* proc_cgm;
+    FILE* proc_usb;
 	int mhz;  
     BatteryState battery;
     unsigned int update_counter;
@@ -58,6 +59,9 @@ int dosd_init()
     
 	g_state.proc_cgm = fopen(CPU_DEVICE, "r");
 	if (!g_state.proc_cgm) goto init_error;
+
+    g_state.proc_usb = fopen(USB_DEVICE, "r");
+	if (!g_state.proc_usb) goto init_error;
 
 	show_speed = cfg_getbool(cfg_main, "SpeedDisp");
 
@@ -143,6 +147,9 @@ void dosd_deinit()
      
 	if (g_state.proc_cgm)
 		fclose(g_state.proc_cgm);
+
+    if (g_state.proc_usb)
+		fclose(g_state.proc_usb);
 #endif
     
     for (i = 0; i < IMG_MAX; i++)
@@ -236,6 +243,16 @@ void _update()
     else if (mvolts >= BAT_LEVEL_FAIR) g_state.battery = BAT_STATE_LEVEL2;
     else if (mvolts >= BAT_LEVEL_LOW ) g_state.battery = BAT_STATE_LEVEL1;
     else                                  g_state.battery = BAT_STATE_EMPTY;
+
+    char * line = NULL;
+    size_t len = 0;
+    ssize_t read;
+	rewind(g_state.proc_usb);
+    read = getline(&line, &len, g_state.proc_usb);
+    
+    if(read == 4) { //equals usb      
+         g_state.battery = BAT_STATE_CHARGING;
+    }     
 
 	// get mhz
 	if ( show_speed ) {

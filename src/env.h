@@ -44,6 +44,7 @@ char THEME_NAME[100];
 #define BACKLIGHT_DEVICE     "/proc/jz/lcd_backlight"
 #define MIXER_DEVICE         "/dev/mixer"
 #define BATTERY_DEVICE       "/proc/jz/battery"
+#define USB_DEVICE       "/sys/devices/platform/musb_hdrc.0/uh_cable"
 
 
 #define SCREEN_WIDTH         480
