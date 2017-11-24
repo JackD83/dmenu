@@ -54,6 +54,7 @@ int filesystem_writeable();
 FILE* load_file_and_handle_fail ( char* file, char* mode, int die_on_fail );
 FILE* load_file( char* file, char* mode );
 FILE* load_file_or_die( char* file, char* mode );
+int file_exist (char *filename);
 char* relative_file(char* path, char* file);
 char* read_first_line( char* file);
 

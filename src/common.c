@@ -97,13 +97,21 @@ char** build_arg_list(char* commandline, char* args)
     char* token;
     const char delimeter[] = " ";
     int len = 0;
+
+      log_message("Building cmd for '%s' ", commandline);
     
-    while ((token = strsep(&commandline, delimeter))) {
-        if (token[0] != '\0') {
-            append_str(args_list, len, strdup(token));
+    //if commandline file exists, dont break up spaces
+    if (file_exist (commandline)) {
+        append_str(args_list, len, strdup(commandline));
+    } else {
+        //not a file, still buggy but works for filelist files
+        while ((token = strsep(&commandline, delimeter))) {
+            if (token[0] != '\0') {
+                append_str(args_list, len, strdup(token));
+            }
         }
     }
-    
+        
     // filelist.c will pass the selected filename in args. filename
     // may contain spaces.
     if (args) {
@@ -628,6 +636,12 @@ SDL_Surface* resize_image(SDL_Surface* in, int width, int height)
     SDL_Surface *tmp = shrink_surface(in, width, height);
     free_surface(in);
     return tmp;
+}
+
+int file_exist (char *filename)
+{
+  struct stat buffer;   
+  return (stat (filename, &buffer) == 0);
 }
 
 SDL_Surface* load_resized_image(char* file, int width, int height)
