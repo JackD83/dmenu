@@ -5,7 +5,15 @@ if [ "`pwd`" != "/mnt/mmc/dmenu" ]; then
     CMD="dmenuc.bin"
 fi
 
+
+if [ ! -f /tmp/udc_connect.sh ];
+then     
+    cp /mnt/mmc/dmenu/scripts/udc_connect.sh /tmp
+    cp /mnt/mmc/dmenu/usb/* /tmp
+fi
+
 touch "$ACT"
+
 
 if ./$CMD; then
     if [ -f "$ACT" ]; then 
