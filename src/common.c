@@ -153,6 +153,8 @@ void execute_next_command(char* dir, char** args)
     char* name  = cfg_getstr(menu_active_item_config, "Name");
     int center = cfg_getbool(menu_active_item_config, "Center");
     int zoom = cfg_getbool(menu_active_item_config, "Zoom");
+    int volumeControl = cfg_getbool(menu_active_item_config, "VolumeControl");
+    
 
     log_message("Executing %s, center %d", name, center);
     
@@ -164,6 +166,10 @@ void execute_next_command(char* dir, char** args)
             fprintf(out, "echo 1 > /proc/jz/lcd_a320\n");
         } else if(zoom) {
              fprintf(out, "echo 2 > /proc/jz/lcd_a320\n");
+        }
+
+        if(volumeControl) {
+              fprintf(out, "/mnt/mmc/dmenu/volume/setVolume &\n");
         }
         
         //Write change dir
@@ -181,6 +187,10 @@ void execute_next_command(char* dir, char** args)
         fprintf(out, "\n");
         if(center || zoom) {          
             fprintf(out, "echo 0 > /proc/jz/lcd_a320\n");
+        }
+
+        if(volumeControl) {
+            fprintf(out, "killall setVolume\n");
         }
 
         fclose(out);
