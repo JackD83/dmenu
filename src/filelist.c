@@ -35,12 +35,14 @@ extern SDL_Surface* background;
 SDL_Surface* list_bg;
 SDL_Surface* list_sel;
 SDL_Surface* list_title;
+SDL_Surface* preview;
 
 SDL_Surface* list_dir_icon;
 SDL_Surface* list_file_icon;
 
 TTF_Font* list_font;
 SDL_Color* list_font_color;
+char * previewPath;
 
 
 typedef struct FileListGlobal 
@@ -49,7 +51,7 @@ typedef struct FileListGlobal
     
     struct dirent **namelist;
     struct stat *statlist;
-    SDL_Surface* list_filename[FILES_PER_PAGE]; 
+    SDL_Surface* list_filename[FILES_PER_PAGE];
     int num_of_files; // total number of files under current directory
     int current_list_start; // index of the file at top of current page
     int current_highlight; // index of the file being highlighted
@@ -96,9 +98,10 @@ void filelist_fill()
 }
 
 int filelist_filter(const struct dirent *dptr)
-{
+{       
+    char* extList  = cfg_getstr(menu_active_item_config, "Extensions");
     return (fl_global.can_change_dir && !fl_global.at_root && is_back_dir(dptr)) 
-            || dptr->d_name[0] != '.';
+            || (dptr->d_name[0] != '.' && (checkExtension(get_filename_ext(dptr->d_name), extList ) || dptr->d_type == DT_DIR) );
 }
 
 int filelist_sort(const struct dirent **a, const struct dirent **b) 
@@ -175,6 +178,8 @@ int filelist_init(char* title, char* executable, char *exec_path, char* select_p
     
     //Make sure it is something
     if (executable == 0) executable = "";
+
+
     
     // load font
     list_font       = get_theme_font(18);
@@ -186,6 +191,10 @@ int filelist_init(char* title, char* executable, char *exec_path, char* select_p
     list_dir_icon  = load_theme_image(cfg_getstr(cfg, "ListDirIcon"));
     list_file_icon = load_theme_image(cfg_getstr(cfg, "ListFileIcon"));
     list_title     = filelist_render_text(title);
+    previewPath    =  cfg_getstr(menu_active_item_config, "Previews");
+
+    free_surface(preview);
+  
     fl_global.status_changed = 1;
 
     // Prep path/executable vars, determine filelist_theme status
@@ -225,6 +234,7 @@ void filelist_deinit()
     free_surface(list_title);
     free_surface(list_dir_icon);
     free_surface(list_file_icon);
+    free_surface(preview);
     free_font(list_font);
     free_color(list_font_color);
 
@@ -234,15 +244,19 @@ void filelist_deinit()
 int filelist_draw(SDL_Surface* screen)
 {
     int i;
-    SDL_Rect image_rect, text_rect;
+    SDL_Rect image_rect, text_rect, preview_rect;
 
     if (!fl_global.status_changed) return 0;
     init_rect_pos(&image_rect, 0,0);
     init_rect_pos(&text_rect, 0,0);
 
+    init_rect_pos(&preview_rect, SCREEN_WIDTH - 230 ,0);
+
     // clear screen
     SDL_BlitSurface(background, 0, screen, &image_rect);
     SDL_BlitSurface(list_bg,    0, screen, &image_rect);
+
+
 
     text_rect.y = FILE_LIST_OFFSET;
     for (i=0; i<FILES_PER_PAGE; i++) 
@@ -269,6 +283,8 @@ int filelist_draw(SDL_Surface* screen)
             text_rect.y += FILE_ENTRY_HEIGHT;
         }
     }
+
+    SDL_BlitSurface(preview,  0, screen, &preview_rect);
 
     fl_global.status_changed = 0;
     return 1;
@@ -346,6 +362,8 @@ void filelist_move_entry(Direction dir)
     }    
     
     fl_global.status_changed = 1;
+
+    loadPreview();
 }
 
 
@@ -429,6 +447,34 @@ void filelist_store_dir()
     {
         conf_dirselect(menu_active_item_config, fl_global.current_path);
     }
+}
+
+void loadPreview() {  
+    if(previewPath == NULL){
+        return;
+    }
+    free_surface(preview);
+
+    int i = fl_global.current_list_start+fl_global.current_highlight;
+    if ( fl_global.namelist[i]->d_type != DT_DIR) 
+    {   
+        char file_name[PATH_MAX] = "";
+        char* name = removeExtension(fl_global.namelist[i]->d_name);
+
+        strcat(file_name, previewPath);
+        if (!ends_with_slash(previewPath)) 
+        {
+            strcat(file_name, "/");
+        }
+        strcat(file_name, name);
+        strcat(file_name, ".png");
+
+        free(name);
+
+        preview = load_image_file(file_name);
+        printf("load preview for %s\n", file_name);
+    } 
+   
 }
 
 // Since filelist_run() has multiple purpose, the next state

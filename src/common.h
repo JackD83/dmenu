@@ -50,6 +50,9 @@ int change_dir(char* path);
 int is_back_dir(const struct dirent *dr);
 int alphasort_i(const struct dirent** a, const struct dirent** b);
 int filesystem_writeable();
+char *get_filename_ext(const char *filename);
+int checkExtension(char* extension, char* list);
+char* removeExtension(char* mystr);
 
 FILE* load_file_and_handle_fail ( char* file, char* mode, int die_on_fail );
 FILE* load_file( char* file, char* mode );

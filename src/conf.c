@@ -35,6 +35,8 @@ cfg_opt_t submenuitem_opts[] = {
     CFG_BOOL("Center", cfg_false, CFGF_NONE),
     CFG_BOOL("Zoom", cfg_false, CFGF_NONE),
     CFG_BOOL("VolumeControl", cfg_false, CFGF_NONE),
+    CFG_STR("Extensions", "%ALL%", CFGF_NONE),
+     CFG_STR("Previews",NULL, CFGF_NONE),
     CFG_END()
 };
 
@@ -48,6 +50,8 @@ cfg_opt_t menuitem_opts[] = {
     CFG_BOOL("Center", cfg_false, CFGF_NONE),
     CFG_BOOL("Zoom", cfg_false, CFGF_NONE),
     CFG_BOOL("VolumeControl", cfg_false, CFGF_NONE),
+    CFG_STR("Extensions", "%ALL%", CFGF_NONE),
+    CFG_STR("Previews",NULL, CFGF_NONE),
     CFG_SEC("SubMenuItem", submenuitem_opts, CFGF_MULTI | CFGF_TITLE),
     CFG_FUNC("include", cfg_include),
     CFG_END()

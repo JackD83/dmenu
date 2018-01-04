@@ -192,7 +192,7 @@ void dosd_show(SDL_Surface* surface)
 	}
 }
 
-inline bool dosd_is_locked() {
+bool dosd_is_locked() {
     return false;
 }
 

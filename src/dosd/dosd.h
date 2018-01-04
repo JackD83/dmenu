@@ -18,7 +18,7 @@ void dosd_deinit();
 void dosd_show(SDL_Surface *surface);
 void dosd_color_reset();
 
-inline bool dosd_is_locked();
+bool dosd_is_locked();
 bool dosd_is_charging();
 
 typedef enum {

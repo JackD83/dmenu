@@ -8,6 +8,7 @@ void filelist_deinit();
 int  filelist_draw(SDL_Surface* screen);
 void filelist_animate(SDL_Surface* screen);
 void filelist_osd(SDL_Surface* screen);
+void loadPreview();
 
 MenuState filelist_keypress(SDLKey key);
 

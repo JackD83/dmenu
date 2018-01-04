@@ -230,6 +230,45 @@ int change_dir(char* path)
     return rc;
 }
 
+char* get_filename_ext(const char *filename) {
+    const char *dot = strrchr(filename, '.');
+    if(!dot || dot == filename) return "";
+    return dot + 1;
+}
+
+char* removeExtension(char* mystr) {
+    char *retstr;
+    char *lastdot;
+    if (mystr == NULL)
+         return NULL;
+    if ((retstr = malloc (strlen (mystr) + 1)) == NULL)
+        return NULL;
+    strcpy (retstr, mystr);
+    lastdot = strrchr (retstr, '.');
+    if (lastdot != NULL)
+        *lastdot = '\0';
+    return retstr;
+}
+
+int checkExtension(char* extension, char* list) { 
+    if(strcmp(list, "%ALL%") == 0) {
+        return 1;
+    }
+
+    char tmp_list[strlen(list)]; strcpy(tmp_list, list);  
+
+    char *token;
+    token = strtok(tmp_list, " ");
+    while(token != NULL)
+    {
+        if(strcmp(token, extension) == 0) {        
+            return 1;
+        }       
+        token = strtok(NULL," ");
+    }
+    return 0;
+}
+
 // Determines if entry references the parent dir as ".."
 int is_back_dir(const struct dirent *dr) 
 {
@@ -281,7 +320,8 @@ SDL_Surface* load_image_file_with_format( char* file , int alpha, int fail_on_no
     if (tmp_surface == NULL) {
         if (fail_on_notfound) {
             log_error("Failed to load %s: %s", file, IMG_GetError());
-            exit(EXIT_FAILURE);
+            SDL_FreeSurface(out);
+            return out;
         } else {
             return NULL;
         }
@@ -406,6 +446,8 @@ void alphaBlendSurface( SDL_Surface* s, int alpha )
             
     if (alpha == 255) return;
 
+    
+
     Uint32 *pixels = (Uint32*)s->pixels, *p;
 
     float alpha_ratio;
@@ -447,6 +489,7 @@ void alphaBlendSurface( SDL_Surface* s, int alpha )
             break;
     }
     #undef map_pixel
+    
 }
 
 /** 
