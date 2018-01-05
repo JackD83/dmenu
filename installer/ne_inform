@@ -1,0 +1,43 @@
+#!/bin/sh
+#KJH add poweroff handler
+
+case $1 in
+	poweroff)
+                cd /
+                rm /tmp/dmenu_ln              
+				touch /tmp/poweroff
+		killall main dmenu.bin dmenuc.bin dmenu nxu.dge	gba_emu.dge	sfc_emu.dge	md_emu.dge	fc_emu.dge	gbcgb_emu.dge	smsgg_emu.dge	ap.dge	ap_set.dge	mplayer	mplayer_set.bin	fm_open.dge	fm_set.dge	record.dge	sdlcalc	countdown.dge	startwatch.dge	viewimage.dge	nupdf.dge	txtreader	rtfreader	docreader	
+                MMC_NAME=`cat /var/MMCNAME`
+                MMC_STATUS=`cat /proc/jz/mmc`
+                sleep 2
+                /boot/local/sbin/show_pic.dge
+                sync
+                #/boot/local/sbin/flushcache /dev/mtdblock5
+				if [ x"$MMC_NAME" != x ] && [ $MMC_NAME != "no" ]
+                then 
+					if [ $MMC_STATUS == "INSERT" ]
+					then 
+					  /boot/local/sbin/flushcache /dev/$MMC_NAME
+					fi
+				fi 
+                sleep 2
+
+                umount /usr/mtdblock3
+                umount /usr/mtdblock4
+                umount /mnt/memory
+				
+				if [ x"$MMC_NAME" != x ] && [ $MMC_NAME != "no" ]
+                then
+					if [ $MMC_STATUS == "INSERT" ]
+					then
+					  umount /mnt/mmc
+					fi
+				fi
+				
+                echo "poweroff script..."
+				poweroff
+                #echo 1 > /proc/sys/pm/hibernate	
+		;;
+	*)
+		;;
+esac

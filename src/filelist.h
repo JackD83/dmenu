@@ -9,7 +9,9 @@ int  filelist_draw(SDL_Surface* screen);
 void filelist_animate(SDL_Surface* screen);
 void filelist_osd(SDL_Surface* screen);
 void loadPreview();
+void setPreviewPath();
 
 MenuState filelist_keypress(SDLKey key);
+void filelist_keyup(SDLKey key);
 
 #endif

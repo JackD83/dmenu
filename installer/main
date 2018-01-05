@@ -1,0 +1,24 @@
+#!/bin/sh 
+export SDL_NOMOUSE=1
+export HOME=/boot/local/home/
+
+#mount mmc
+/usr/bin/udc_disconnect.sh
+
+if [ -f /mnt/mmc/dmenu/dmenu ];
+then   
+   cd /tmp/
+   rm dmenuc.bin
+   rm dmenu_ln
+   cp /mnt/mmc/dmenu/dmenuc.bin /tmp/
+   cp /mnt/mmc/dmenu/dmenu /tmp/
+   if [ ! -f /tmp/poweroff ];
+        then  
+        ./dmenu
+        fi
+else
+   cd /tmp/
+   rm dmenu.bin
+   cp /usr/local/dmenu/dmenu.bin /tmp/
+   ./dmenu_ln
+fi

@@ -29,6 +29,7 @@
 
 //Get access to the current menu item
 extern cfg_t* menu_active_item_config;
+extern cfg_t* cfg_main;
 extern cfg_t *cfg;
 extern SDL_Surface* background;
 
@@ -42,8 +43,10 @@ SDL_Surface* list_file_icon;
 
 TTF_Font* list_font;
 SDL_Color* list_font_color;
-char * previewPath;
-
+char * preview_path = "";
+char * previewBasePath = NULL;
+int showPreview = 1;
+int hideExtension;
 
 typedef struct FileListGlobal 
 {
@@ -74,7 +77,7 @@ SDL_Surface* filelist_render_text(char* text)
 }
 
 void filelist_fill()
-{
+{  
     int i, j;
     //Clear old entries
     for (i=0;i<FILES_PER_PAGE;i++) 
@@ -91,8 +94,13 @@ void filelist_fill()
     {
         if (j < fl_global.num_of_files) 
         {
-            fl_global.list_filename[i] = 
-                filelist_render_text(fl_global.namelist[j]->d_name);
+            if(hideExtension) {
+                char* name = removeExtension(fl_global.namelist[j]->d_name);
+                fl_global.list_filename[i] = filelist_render_text(name);
+                free(name);
+            } else {
+                fl_global.list_filename[i] = filelist_render_text(fl_global.namelist[j]->d_name);
+            }           
         }
     }
 }
@@ -170,16 +178,12 @@ void filelist_clear_list()
     fl_global.current_list_start = fl_global.current_highlight = fl_global.num_of_files = 0;
 }
 
-
-
 int filelist_init(char* title, char* executable, char *exec_path, char* select_path, int can_change_dirs)
 {
     log_debug("Initializing");
     
     //Make sure it is something
     if (executable == 0) executable = "";
-
-
     
     // load font
     list_font       = get_theme_font(18);
@@ -191,7 +195,8 @@ int filelist_init(char* title, char* executable, char *exec_path, char* select_p
     list_dir_icon  = load_theme_image(cfg_getstr(cfg, "ListDirIcon"));
     list_file_icon = load_theme_image(cfg_getstr(cfg, "ListFileIcon"));
     list_title     = filelist_render_text(title);
-    previewPath    =  cfg_getstr(menu_active_item_config, "Previews");
+    previewBasePath    =  cfg_getstr(menu_active_item_config, "Previews");
+    hideExtension = cfg_getbool(cfg_main, "HideExtensions");  
 
     free_surface(preview);
   
@@ -250,7 +255,7 @@ int filelist_draw(SDL_Surface* screen)
     init_rect_pos(&image_rect, 0,0);
     init_rect_pos(&text_rect, 0,0);
 
-    init_rect_pos(&preview_rect, SCREEN_WIDTH - 230 ,0);
+    init_rect_pos(&preview_rect, SCREEN_WIDTH - 210 ,30);
 
     // clear screen
     SDL_BlitSurface(background, 0, screen, &image_rect);
@@ -304,6 +309,7 @@ void filelist_shift_page(Direction dir)
         start = 0, 
         end = FILES_PER_PAGE-1, 
         delta = 1;
+   
 
     if (dir == PREV) 
     {
@@ -319,7 +325,14 @@ void filelist_shift_page(Direction dir)
     }
     
     fl_global.current_list_start += delta;
-    fl_global.list_filename[end] = filelist_render_text(fl_global.namelist[fl_global.current_list_start+end]->d_name);
+
+    if(hideExtension) {
+        char* name = removeExtension(fl_global.namelist[fl_global.current_list_start+end]->d_name);
+        fl_global.list_filename[end] = filelist_render_text(name);
+        free(name);
+    } else {
+            fl_global.list_filename[end] = filelist_render_text(fl_global.namelist[fl_global.current_list_start+end]->d_name);
+    }   
 }
 
 void filelist_wrap_page(Direction dir) 
@@ -360,10 +373,10 @@ void filelist_move_entry(Direction dir)
     {
         filelist_wrap_page(dir);
     }    
-    
-    fl_global.status_changed = 1;
 
-    loadPreview();
+    setpreviewBasePath();
+    
+    fl_global.status_changed = 1;   
 }
 
 
@@ -377,6 +390,8 @@ void filelist_move_page(Direction dir)
     fl_global.current_highlight = 0;
     
     filelist_fill();
+
+    setpreviewBasePath();
     
     fl_global.status_changed = 1;
 }
@@ -449,31 +464,59 @@ void filelist_store_dir()
     }
 }
 
-void loadPreview() {  
-    if(previewPath == NULL){
+void togglePreview() {
+    if(showPreview) {
+        showPreview = 0;
+    } else {
+        showPreview = 1;
+    }
+    loadPreview();
+     fl_global.status_changed = 1;
+}
+
+void setpreviewBasePath() {
+    if(previewBasePath == NULL) {
         return;
     }
-    free_surface(preview);
 
     int i = fl_global.current_list_start+fl_global.current_highlight;
-    if ( fl_global.namelist[i]->d_type != DT_DIR) 
+    if ( fl_global.namelist[i]->d_type != DT_DIR) //d_type may not work on every file system. Does on Ext and FAT -> works for Dingoox
     {   
         char file_name[PATH_MAX] = "";
         char* name = removeExtension(fl_global.namelist[i]->d_name);
 
-        strcat(file_name, previewPath);
-        if (!ends_with_slash(previewPath)) 
+        strcat(file_name, previewBasePath);
+        if (!ends_with_slash(previewBasePath)) 
         {
             strcat(file_name, "/");
         }
         strcat(file_name, name);
         strcat(file_name, ".png");
-
         free(name);
 
-        preview = load_image_file(file_name);
-        printf("load preview for %s\n", file_name);
+        preview_path = file_name;             
+    } else {
+         preview_path = "";   
     } 
+}
+
+void loadPreview() {  
+    if(previewBasePath == NULL){
+        return;
+    }
+    
+    free_surface(preview);
+
+    if(!showPreview) {
+        return;
+    }
+
+    if(file_exist (preview_path)) {
+        preview = load_image_file(preview_path);    
+    }   
+
+    fl_global.status_changed = 1;
+     
    
 }
 
@@ -535,8 +578,24 @@ MenuState filelist_keypress(SDLKey key)
             return MAINMENU;
         case DINGOO_BUTTON_A:
             return filelist_run();
+        case DINGOO_BUTTON_Y:
+            togglePreview();
+            break;
         default:break;
     }
 
     return FILELIST;
+}
+
+void filelist_keyup(SDLKey key) {     
+     switch (key) 
+    {
+        case DINGOO_BUTTON_L:
+        case DINGOO_BUTTON_R:       
+        case DINGOO_BUTTON_UP:
+        case DINGOO_BUTTON_DOWN:
+           loadPreview();
+            break;
+        default:break;
+    }
 }

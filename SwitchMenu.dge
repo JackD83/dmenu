@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ -f /mnt/mmc/dmenu/dmenu ];
+then     
+   mv /mnt/mmc/dmenu/dmenu /mnt/mmc/dmenu/dmenu.backup
+else
+   mv /mnt/mmc/dmenu/dmenu.backup /mnt/mmc/dmenu/dmenu
+fi
+reboot

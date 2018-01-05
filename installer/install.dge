@@ -1,0 +1,9 @@
+#!/bin/sh
+./remount.sh
+/bin/rm -r /usr/local/home>> stdout.txt 2>> stderr.txt
+/bin/mkdir /mnt/memory/home >> stdout.txt 2>> stderr.txt
+/bin/ln -s /mnt/memory/home /usr/local/home >> stdout.txt 2>> stderr.txt
+/bin/cp /etc/main main.backup >> stdout.txt 2>> stderr.txt
+/bin/cp /usr/local/sbin/ne_inform ne_inform.backup >> stdout.txt 2>> stderr.txt
+/bin/cp main /etc/main >> stdout.txt 2>> stderr.txt
+/bin/cp ne_inform /usr/local/sbin/ >> stdout.txt 2>> stderr.txt

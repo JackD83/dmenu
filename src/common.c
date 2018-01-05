@@ -237,6 +237,7 @@ char* get_filename_ext(const char *filename) {
 }
 
 char* removeExtension(char* mystr) {
+   
     char *retstr;
     char *lastdot;
     if (mystr == NULL)
@@ -447,6 +448,7 @@ void alphaBlendSurface( SDL_Surface* s, int alpha )
     if (alpha == 255) return;
 
     
+    #ifdef DINGOO_BUILD
 
     Uint32 *pixels = (Uint32*)s->pixels, *p;
 
@@ -490,6 +492,7 @@ void alphaBlendSurface( SDL_Surface* s, int alpha )
     }
     #undef map_pixel
     
+    #endif
 }
 
 /** 

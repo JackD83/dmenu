@@ -426,7 +426,11 @@ void listen()
                 key = event.key.keysym.sym;
                 if (key == SDLK_ESCAPE)
                     escape_held = false;
+                if(state == FILELIST) {                  
+                    filelist_keyup(key);
+                }
                 break;
+
 
             // check for keypresses
             case SDL_KEYDOWN:
@@ -460,7 +464,7 @@ void listen()
                 case MAINMENU:
                     state = menu_keypress(key);
                     break;
-                case FILELIST:
+                case FILELIST:                  
                     state = filelist_keypress(key);
                     break;
                 case IMAGEVIEWER:

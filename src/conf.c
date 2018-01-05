@@ -123,6 +123,7 @@ cfg_opt_t main_opts[] = {
     CFG_BOOL("WatchDisp", cfg_false, CFGF_NONE),
 	CFG_BOOL("SpeedDisp", cfg_false, CFGF_NONE),
     CFG_BOOL("ReadOnly", cfg_false, CFGF_NONE),
+    CFG_BOOL("HideExtensions", cfg_true, CFGF_NONE),
     CFG_INT("SndVol", 50, CFGF_NONE),
     CFG_INT("Bright", 99, CFGF_NONE),
     CFG_STR("Background", 0, CFGF_NONE),
