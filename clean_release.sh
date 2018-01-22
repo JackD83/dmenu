@@ -7,6 +7,7 @@ cd volume
 make -f Makefile.dingux clean
 cd ..
 cd viewimage
+cd ..
 cd volume
 make -f Makefile.dingux clean
 cd ..
