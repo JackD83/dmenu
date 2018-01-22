@@ -400,6 +400,12 @@ void filelist_move_left()
 {
     sound_out( CANCEL );
 
+    //reset preview
+    preview_path = "";  
+    loadPreview();
+
+   log_debug("move up");
+
     if (fl_global.at_root) 
     {
         return;
@@ -421,6 +427,7 @@ void filelist_move_left()
         filelist_get_list(fl_global.current_path);
         fl_global.status_changed = 1;
     }
+
 
 }
 
@@ -485,6 +492,7 @@ void setpreviewBasePath() {
         char file_name[PATH_MAX] = "";
         char* name = removeExtension(fl_global.namelist[i]->d_name);
 
+
         strcat(file_name, previewBasePath);
         if (!ends_with_slash(previewBasePath)) 
         {
@@ -496,7 +504,8 @@ void setpreviewBasePath() {
 
         preview_path = file_name;             
     } else {
-         preview_path = "";   
+         preview_path = "";  
+            log_debug("path empty"); 
     } 
 }
 
