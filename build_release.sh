@@ -4,8 +4,7 @@ make -f Makefile.dingoo
 cd volume 
 make -f Makefile.dingux
 cd ..
-cd viewimage
-cd volume 
+cd volume
 make -f Makefile.dingux
 cd ..
 
