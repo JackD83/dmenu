@@ -5,7 +5,6 @@ cd volume
 make -f Makefile.dingux
 cd ..
 cd viewimage
-cd volume 
 make -f Makefile.dingux
 cd ..
 
