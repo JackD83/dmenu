@@ -23,7 +23,7 @@ int  FILESYSTEM_READ_ONLY;
 #define can_write_fs()       !FILESYSTEM_READ_ONLY
 #define cant_write_fs()      FILESYSTEM_READ_ONLY
 
-#define DIMMER_DELAY         60
+#define DIMMER_DELAY        60
 #define SHUTDOWN_DELAY		0
 #define DMENU_THEMES         DMENU_PATH "themes/"
 #define DMENU_CONF_FILE      DMENU_PATH DMENU_CONF_FILE_NAME
@@ -47,8 +47,17 @@ char THEME_NAME[100];
 #define USB_DEVICE       "/sys/devices/platform/musb_hdrc.0/uh_cable"
 
 
+#if RS97
+#define SCREEN_WIDTH         320
+#define SCREEN_HEIGHT        240
+#define PREVIEW_OFFSET_RIGHT 100
+#else
 #define SCREEN_WIDTH         480
 #define SCREEN_HEIGHT        272
+#define PREVIEW_OFFSET_RIGHT 240
+#endif
+
+
 #define SCREEN_COLOR_DEPTH   16
 #define SCREEN_BPP           (SCREEN_COLOR_DEPTH>>3)
 

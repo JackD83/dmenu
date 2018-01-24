@@ -255,7 +255,7 @@ int filelist_draw(SDL_Surface* screen)
     init_rect_pos(&image_rect, 0,0);
     init_rect_pos(&text_rect, 0,0);
 
-    init_rect_pos(&preview_rect, SCREEN_WIDTH - 210 ,30);
+    init_rect_pos(&preview_rect, PREVIEW_OFFSET_RIGHT ,30);
 
     // clear screen
     SDL_BlitSurface(background, 0, screen, &image_rect);
