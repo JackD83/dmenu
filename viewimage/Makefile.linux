@@ -1,0 +1,17 @@
+CC=gcc
+CXX=g++
+RM=rm -f
+CPPFLAGS=-g -I /usr/include/SDL
+LDFLAGS=-I /usr/include/SDL
+LDLIBS= -lSDL -lSDL_image
+
+SRCS=main.cpp
+OBJS=$(subst .cpp,.o,$(SRCS))
+
+all: main
+
+main: $(OBJS)
+	$(CXX) $(LDFLAGS) -o viewimage.dge $(OBJS) $(LDLIBS)
+
+clean:
+	$(RM) $(OBJS)

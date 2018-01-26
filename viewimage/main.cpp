@@ -14,9 +14,20 @@ int main(int argc, char *args[])
         exit(1);
     }
 
+
+    const SDL_VideoInfo* info = SDL_GetVideoInfo();   //<-- calls SDL_GetVideoInfo();   
+    int screenWidth = info->current_w;
+    int screenHeight = info->current_h;
+
+    if(screenWidth > 480) {
+        screenWidth = 320;
+        screenHeight = 480;
+    }
+
+
     // Set the video mode
     SDL_Surface *display;
-    display = SDL_SetVideoMode(480, 272, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+    display = SDL_SetVideoMode(screenWidth, screenHeight, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
     if (display == NULL)
     {
         cerr << "SDL_SetVideoMode() Failed: " << SDL_GetError() << endl;

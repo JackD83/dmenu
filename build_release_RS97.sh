@@ -16,7 +16,7 @@ cp -a themes_RS97 build_release/dmenu/themes
 cp -a wallpapers build_release/dmenu
 
 mkdir -p build_release/dmenu/usb
-cp viewimage/usb.png build_release/dmenu/usb
+cp viewimage/usb_RS97.png build_release/dmenu/usb/usb.png
 cp viewimage/viewimage.dge build_release/dmenu/usb
 
 mkdir -p build_release/dmenu/volume
