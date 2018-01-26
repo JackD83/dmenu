@@ -1,0 +1,2 @@
+#!/bin/sh
+dd if=/dev/mmcblk0 of=backup.bin bs=1M

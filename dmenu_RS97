@@ -1,0 +1,30 @@
+#!/bin/sh
+ACT="/tmp/.nextCMD"
+CMD="LD_PRELOAD=/mnt/mmc/dmenu/sdlfix.so ./dmenuc.bin"
+if [ "`pwd`" != "/mnt/mmc/dmenu" ]; then 
+    CMD="LD_PRELOAD=/mnt/mmc/dmenu/sdlfix.so ./dmenuc.bin"
+fi
+
+
+if [ ! -f /tmp/udc_connect.sh ];
+then     
+    cp /mnt/mmc/dmenu/scripts/udc_connect.sh /tmp
+    cp /mnt/mmc/dmenu/usb/* /tmp
+fi
+
+touch "$ACT"
+
+
+if eval $CMD; then
+    if [ -f "$ACT" ]; then 
+        echo "executing:" >> /tmp/stdout.txt
+        cat $ACT  >> /tmp/stdout.txt
+        if  ! sh $ACT >> /tmp/stdout.txt 2>> /tmp/stderr.txt; then
+#           sleep 5
+            echo
+        fi
+        rm -f "$ACT"
+    fi
+else
+    sleep 30
+fi
