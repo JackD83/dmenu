@@ -1,4 +1,4 @@
-This fork is based on Dmenu 0.7(test release) and adapted to work on the PAP KIII Plus (K3P)     
+This fork is based on Dmenu 0.7(test release) and adapted to work on the PAP KIII Plus (K3P) and the RS-97  
 
 
 
@@ -8,18 +8,20 @@ This fork is based on Dmenu 0.7(test release) and adapted to work on the PAP KII
                                =======================
 
 Dmenu is a simple menu system for Dingux (Linux on K3P and other). It is optimized to work with the 480x272
-resoltion of the K3P. You need an sd-card for this menu that plugs into the external slot of the K3P.
+resoltion of the K3P and the 320x480 of the RS-97. You need an sd-card for this menu that plugs into the external slot of the device
 
 
 
 Installation
 ------------
-Advice: Make a backup of your internal sd-card! That means openig the device, removing the internal card and making a backup with a software like "win32diskimager" on windows or dd on linux. This step is not required, but the installation of this dmenu will alter internal partitions and having a backup is a good idea!
 
-1. Extract the content of the lates release(e.g. dmenu_0.7_k3_0.5.zip ) onto your new external card. You need the dmenu folder in the root of your sd-card
-2. If you want to use the alternative emulators as well (you do!), extract the emulators.zip and apps.zip to the root folder as well.
-3. Use the build-in file browser and navigate to sd-card/dmenu/installer
-4. Run the install.dge file
+
+1. Extract the content of the lates release(e.g. dmenu_0.7_k3_0.5.zip or dmenu_0.7_RS97_0.5.zip ) onto your new external card. You need the dmenu folder in the root of your sd-card
+2. Advice: Make a backup of your internal sd-card! You can use the backup.dge in sd-card/dmenu/installer to do this. It will take some time and has only a black screen. 
+You need at least 4gb space on the sd-card. This step is not required, but the installation of this dmenu will alter internal partitions and having a backup is a good idea!
+3. If you want to use the alternative emulators as well (you do!), extract the emulators.zip (or emulators_RS97.zip) and apps.zip (or apps_RS97.zip) to the root folder as well.
+4. Use the build-in file browser and navigate to sd-card/dmenu/installer
+5. Run the install.dge file
 
 -> The new dmenu should open and is now the default menu.
 
